@@ -20,8 +20,6 @@ class Event(models.Model):
         on_delete=models.CASCADE,
         verbose_name="User",
         related_name="events",
-        null=True,
-        blank=True,
     )
 
     def __str__(self):
