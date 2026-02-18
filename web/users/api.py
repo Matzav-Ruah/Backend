@@ -11,7 +11,7 @@ api = NinjaAPI(urls_namespace="users")
 
 @api.get("/get-csrf-token")
 def get_csrf_token(request):
-    return {"csrftoken": get_token(request)}
+    return {"success": True, "csrftoken": get_token(request)}
 
 
 @api.post("/login")
@@ -26,20 +26,12 @@ def login_view(request, payload: schemas.SignInSchema):
 @api.post("/logout", auth=django_auth)
 def logout_view(request):
     logout(request)
-    return {"message": "Logged out"}
+    return {"success": True}
 
 
-@api.get("/user", auth=django_auth)
+@api.get("/user", auth=django_auth, response=schemas.UserSchema)
 def user(request):
-    secret_fact = (
-        "The moment one gives close attention to any thing, even a blade of grass",
-        "it becomes a mysterious, awesome, indescribably magnificent world in itself.",
-    )
-    return {
-        "username": request.user.username,
-        "email": request.user.email,
-        "secret_fact": secret_fact,
-    }
+    return schemas.UserSchema.from_orm(request.user)
 
 
 @api.post("/register")
@@ -48,8 +40,11 @@ def register(request, payload: schemas.SignInSchema):
         User.objects.create_user(
             username=payload.email, email=payload.email, password=payload.password
         )
-        return {"success": "User registered successfully"}
+        return {"success": True, "message": "User registered successfully"}
     except IntegrityError:
-        return {"error": "An account with this email already exists."}
+        return {
+            "success": False,
+            "message": "An account with this email already exists.",
+        }
     except Exception:
-        return {"error": "Registration failed. Please try again."}
+        return {"success": False, "message": "Registration failed. Please try again."}
