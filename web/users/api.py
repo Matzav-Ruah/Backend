@@ -2,6 +2,7 @@ from ninja import NinjaAPI
 from ninja.security import django_auth
 from django.contrib.auth import authenticate, login, logout
 from django.middleware.csrf import get_token
+from django.db import IntegrityError
 from .models import User
 from . import schemas
 
@@ -48,5 +49,7 @@ def register(request, payload: schemas.SignInSchema):
             username=payload.email, email=payload.email, password=payload.password
         )
         return {"success": "User registered successfully"}
-    except Exception as e:
-        return {"error": str(e)}
+    except IntegrityError:
+        return {"error": "An account with this email already exists."}
+    except Exception:
+        return {"error": "Registration failed. Please try again."}
