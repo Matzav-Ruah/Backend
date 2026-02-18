@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 EMOTIONAL_STATES = [
     ("bad", "Bad"),
@@ -14,6 +15,14 @@ class Event(models.Model):
     data = models.JSONField(verbose_name="Data")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="User",
+        related_name="events",
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return self.emotional_state
