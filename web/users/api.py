@@ -5,7 +5,7 @@ from django.middleware.csrf import get_token
 from .models import User
 from . import schemas
 
-api = NinjaAPI()
+api = NinjaAPI(urls_namespace="users")
 
 
 @api.get("/get-csrf-token")
