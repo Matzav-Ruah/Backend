@@ -13,6 +13,9 @@ class User(AbstractUser):
     settings = models.JSONField(default=dict, verbose_name="Settings")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
+    events_last_updated_at = models.DateTimeField(
+        null=True, blank=True, verbose_name="Events last updated at"
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "first_name"]
