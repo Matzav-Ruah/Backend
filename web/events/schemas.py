@@ -1,8 +1,15 @@
-from typing import Literal, Optional
+from typing import Generic, Literal, Optional, TypeVar
 from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
+T = TypeVar("T")
+
 EMOTIONAL_STATE_CHOICES = Literal["bad", "neutral", "good"]
+
+
+class ApiResponse(BaseModel, Generic[T]):
+    success: bool
+    data: T
 
 
 class EventSchema(BaseModel):

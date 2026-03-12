@@ -7,28 +7,32 @@ from . import schemas
 api = NinjaAPI(urls_namespace="events", auth=django_auth)
 
 
-@api.get("/get-all-events", response=list[schemas.EventSchema])
+@api.get("/get-all-events", response=schemas.ApiResponse[list[schemas.EventSchema]])
 def get_all_events(request):
     events = Event.objects.filter(user=request.user).all()
-    return [schemas.EventSchema.from_orm(event) for event in events]
+    return {
+        "success": True,
+        "data": [schemas.EventSchema.from_orm(event) for event in events],
+    }
 
 
-@api.get("/get-event", response=schemas.EventSchema)
+@api.get("/get-event", response=schemas.ApiResponse[schemas.EventSchema])
 def get_event(request, event_id: int):
-    return get_object_or_404(Event, id=event_id, user=request.user)
+    event = get_object_or_404(Event, id=event_id, user=request.user)
+    return {"success": True, "data": event}
 
 
-@api.post("/create-event", response={201: schemas.EventSchema})
+@api.post("/create-event", response={201: schemas.ApiResponse[schemas.EventSchema]})
 def create_event(request, payload: schemas.CreateEventSchema):
     event = Event.objects.create(
         user=request.user,
         emotional_state=payload.emotional_state,
         data=payload.data,
     )
-    return 201, event
+    return 201, {"success": True, "data": event}
 
 
-@api.put("/update-event/{event_id}", response=schemas.EventSchema)
+@api.put("/update-event/{event_id}", response=schemas.ApiResponse[schemas.EventSchema])
 def update_event(request, event_id: int, payload: schemas.UpdateEventSchema):
     event = get_object_or_404(Event, id=event_id, user=request.user)
 
@@ -38,11 +42,11 @@ def update_event(request, event_id: int, payload: schemas.UpdateEventSchema):
         event.data = payload.data
 
     event.save()
-    return event
+    return {"success": True, "data": event}
 
 
-@api.delete("/delete-event/{event_id}", response={200: dict})
+@api.delete("/delete-event/{event_id}", response=schemas.ApiResponse[dict])
 def delete_event(request, event_id: int):
     event = get_object_or_404(Event, id=event_id, user=request.user)
     event.delete()
-    return 200, {"success": True}
+    return {"success": True, "data": {}}
