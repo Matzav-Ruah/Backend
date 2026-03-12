@@ -1,6 +1,6 @@
 # Run server
 rw:
-	uv run python web/manage.py runserver
+	uv run python web/manage.py runserver 0.0.0.0:8000
 
 # Migrate
 mg:
