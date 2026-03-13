@@ -12,7 +12,8 @@ class Event(models.Model):
     emotional_state = models.CharField(
         max_length=10, choices=EMOTIONAL_STATES, verbose_name="Emotional state"
     )
-    data = models.JSONField(verbose_name="Data")
+    event_data = models.JSONField(verbose_name="Event data")
+    date = models.DateField(verbose_name="Date")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
     user = models.ForeignKey(
