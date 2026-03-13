@@ -17,7 +17,8 @@ class EventSchema(BaseModel):
 
     id: int
     emotional_state: str
-    data: dict
+    event_data: dict
+    date: datetime
     created_at: datetime
     updated_at: datetime
 
