@@ -23,5 +23,13 @@ class Event(models.Model):
         related_name="events",
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "date"],
+                name="unique_user_date_event",
+            )
+        ]
+
     def __str__(self):
         return self.emotional_state

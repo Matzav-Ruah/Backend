@@ -1,6 +1,6 @@
 from typing import Generic, Literal, Optional, TypeVar
 from pydantic import BaseModel, ConfigDict
-from datetime import datetime
+from datetime import datetime, date
 
 T = TypeVar("T")
 
@@ -18,7 +18,7 @@ class EventSchema(BaseModel):
     id: int
     emotional_state: str
     event_data: dict
-    date: datetime
+    date: date
     created_at: datetime
     updated_at: datetime
 
@@ -26,6 +26,7 @@ class EventSchema(BaseModel):
 class CreateEventSchema(BaseModel):
     emotional_state: EMOTIONAL_STATE_CHOICES
     data: dict
+    date: date
 
 
 class UpdateEventSchema(BaseModel):
