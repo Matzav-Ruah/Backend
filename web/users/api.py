@@ -23,17 +23,6 @@ def login_view(request, payload: schemas.SignInSchema):
     return {"success": False, "message": "Invalid credentials"}
 
 
-@api.post("/logout", auth=django_auth)
-def logout_view(request):
-    logout(request)
-    return {"success": True}
-
-
-@api.get("/user", auth=django_auth, response=schemas.UserSchema)
-def user(request):
-    return schemas.UserSchema.from_orm(request.user)
-
-
 @api.post("/register")
 def register(request, payload: schemas.SignInSchema):
     try:
@@ -48,3 +37,23 @@ def register(request, payload: schemas.SignInSchema):
         }
     except Exception:
         return {"success": False, "message": "Registration failed. Please try again."}
+
+
+@api.post("/logout", auth=django_auth)
+def logout_view(request):
+    logout(request)
+    return {"success": True}
+
+
+@api.get("/user", auth=django_auth)
+def user(request):
+    return {"success": True, "data": schemas.UserSchema.from_orm(request.user)}
+
+
+@api.get("/leaderboard", auth=django_auth)
+def get_leaderboard(request):
+    users = User.objects.all().order_by("-streak_count")[:10]
+    return {
+        "success": True,
+        "data": [schemas.UserProfileSchema.from_orm(user) for user in users],
+    }
