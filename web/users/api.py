@@ -52,8 +52,18 @@ def user(request):
 
 @api.get("/leaderboard", auth=django_auth)
 def get_leaderboard(request):
-    users = User.objects.all().order_by("-streak_count")[:10]
+    users = User.objects.all().order_by("-streak_count", "id")[:3]
+    position = (
+        User.objects.filter(
+            Q(streak_count__gt=user.streak_count)
+            | Q(streak_count=user.streak_count, id__lt=user.id)
+        ).count()
+        + 1
+    )
     return {
         "success": True,
-        "data": [schemas.UserProfileSchema.from_orm(user) for user in users],
+        "data": {
+            "users": [schemas.UserProfileSchema.from_orm(user) for user in users],
+            "activeUserPosition": position,
+        },
     }

@@ -23,6 +23,7 @@ class UserSchema(BaseModel):
 
 class UserProfileSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
+    id: int
     username: str
     streak_count: int
 
