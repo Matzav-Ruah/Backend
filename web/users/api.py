@@ -3,6 +3,7 @@ from ninja.security import django_auth
 from django.contrib.auth import authenticate, login, logout
 from django.middleware.csrf import get_token
 from django.db import IntegrityError
+from django.db.models import Q
 from .models import User
 from . import schemas
 
@@ -55,8 +56,8 @@ def get_leaderboard(request):
     users = User.objects.all().order_by("-streak_count", "id")[:3]
     position = (
         User.objects.filter(
-            Q(streak_count__gt=user.streak_count)
-            | Q(streak_count=user.streak_count, id__lt=user.id)
+            Q(streak_count__gt=request.user.streak_count)
+            | Q(streak_count=request.user.streak_count, id__lt=request.user.id)
         ).count()
         + 1
     )
