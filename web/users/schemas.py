@@ -16,5 +16,16 @@ class UserSchema(BaseModel):
     first_name: str
     last_name: str
     settings: dict
+    streak_count: int
     created_at: datetime
     updated_at: datetime
+
+
+class UserProfileSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    username: str
+    streak_count: int
+
+
+class UpdateStreakSchema(BaseModel):
+    submit_time: datetime
