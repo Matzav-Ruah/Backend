@@ -1,3 +1,4 @@
+from datetime import date
 from django.shortcuts import get_object_or_404
 from ninja.security import django_auth
 from ninja import NinjaAPI
@@ -17,8 +18,8 @@ def get_all_events(request):
 
 
 @api.get("/get-event", response=schemas.ApiResponse[schemas.EventSchema])
-def get_event(request, event_id: int):
-    event = get_object_or_404(Event, id=event_id, user=request.user)
+def get_event(request, date: date):
+    event = get_object_or_404(Event, date=date, user=request.user)
     return {"success": True, "data": event}
 
 
@@ -27,26 +28,27 @@ def create_event(request, payload: schemas.CreateEventSchema):
     event = Event.objects.create(
         user=request.user,
         emotional_state=payload.emotional_state,
-        data=payload.data,
+        event_data=payload.data,
+        date=payload.date,
     )
     return 201, {"success": True, "data": event}
 
 
-@api.put("/update-event/{event_id}", response=schemas.ApiResponse[schemas.EventSchema])
-def update_event(request, event_id: int, payload: schemas.UpdateEventSchema):
-    event = get_object_or_404(Event, id=event_id, user=request.user)
+@api.put("/update-event", response=schemas.ApiResponse[schemas.EventSchema])
+def update_event(request, date: date, payload: schemas.UpdateEventSchema):
+    event = get_object_or_404(Event, date=date, user=request.user)
 
     if payload.emotional_state is not None:
         event.emotional_state = payload.emotional_state
     if payload.data is not None:
-        event.data = payload.data
+        event.event_data = payload.data
 
     event.save()
     return {"success": True, "data": event}
 
 
-@api.delete("/delete-event/{event_id}", response=schemas.ApiResponse[dict])
-def delete_event(request, event_id: int):
-    event = get_object_or_404(Event, id=event_id, user=request.user)
+@api.delete("/delete-event", response=schemas.ApiResponse[dict])
+def delete_event(request, date: date):
+    event = get_object_or_404(Event, date=date, user=request.user)
     event.delete()
     return {"success": True, "data": {}}
