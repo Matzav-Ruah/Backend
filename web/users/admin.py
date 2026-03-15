@@ -9,7 +9,6 @@ class UserAdmin(BaseUserAdmin):
         "email",
         "first_name",
         "last_name",
-        "streak_count",
         "is_staff",
         "is_superuser",
         "created_at",

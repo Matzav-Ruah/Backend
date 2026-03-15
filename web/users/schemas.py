@@ -24,7 +24,6 @@ class UserSchema(BaseModel):
     first_name: str
     last_name: str
     settings: dict
-    streak_count: int
     created_at: datetime
     updated_at: datetime
 

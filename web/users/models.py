@@ -13,7 +13,6 @@ class User(AbstractUser):
         max_length=150, verbose_name="Last name", null=True, blank=True
     )
     settings = models.JSONField(default=dict, verbose_name="Settings")
-    streak_count = models.IntegerField(default=0, verbose_name="Streak count")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
 
