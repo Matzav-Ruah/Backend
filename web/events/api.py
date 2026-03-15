@@ -19,8 +19,10 @@ def get_all_events(request):
 
 @api.get("/get-event", response=schemas.ApiResponse[schemas.EventSchema])
 def get_event(request, date: date):
-    event = get_object_or_404(Event, date=date, user=request.user)
-    return {"success": True, "data": event}
+    event = Event.objects.filter(date=date, user=request.user).first()
+    if not event:
+        return {"success": False, "data": None}
+    return {"success": True, "data": schemas.EventSchema.from_orm(event)}
 
 
 @api.post("/create-event", response={201: schemas.ApiResponse[schemas.EventSchema]})
@@ -28,10 +30,10 @@ def create_event(request, payload: schemas.CreateEventSchema):
     event = Event.objects.create(
         user=request.user,
         emotional_state=payload.emotional_state,
-        event_data=payload.data,
+        event_data=payload.event_data,
         date=payload.date,
     )
-    return 201, {"success": True, "data": event}
+    return 201, {"success": True, "data": schemas.EventSchema.from_orm(event)}
 
 
 @api.put("/update-event", response=schemas.ApiResponse[schemas.EventSchema])
@@ -40,8 +42,8 @@ def update_event(request, date: date, payload: schemas.UpdateEventSchema):
 
     if payload.emotional_state is not None:
         event.emotional_state = payload.emotional_state
-    if payload.data is not None:
-        event.event_data = payload.data
+    if payload.event_data is not None:
+        event.event_data = payload.event_data
 
     event.save()
     return {"success": True, "data": event}

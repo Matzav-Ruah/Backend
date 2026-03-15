@@ -9,7 +9,7 @@ EMOTIONAL_STATE_CHOICES = Literal["bad", "neutral", "good"]
 
 class ApiResponse(BaseModel, Generic[T]):
     success: bool
-    data: T
+    data: Optional[T] = None
 
 
 class EventSchema(BaseModel):
@@ -25,10 +25,10 @@ class EventSchema(BaseModel):
 
 class CreateEventSchema(BaseModel):
     emotional_state: EMOTIONAL_STATE_CHOICES
-    data: dict
+    event_data: dict
     date: date
 
 
 class UpdateEventSchema(BaseModel):
     emotional_state: Optional[EMOTIONAL_STATE_CHOICES] = None
-    data: Optional[dict] = None
+    event_data: Optional[dict] = None
