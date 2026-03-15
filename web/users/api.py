@@ -6,6 +6,9 @@ from django.db import IntegrityError
 from django.db.models import Q
 from .models import User
 from . import schemas
+from datetime import timedelta, datetime
+from events.models import Event
+
 
 api = NinjaAPI(urls_namespace="users")
 
@@ -68,3 +71,9 @@ def get_leaderboard(request):
             "activeUserPosition": position,
         },
     }
+
+
+@api.get("/get-user-streak", response=schemas.ApiResponse[schemas.StreakSchema])
+def get_user_streak(request):
+    streak = request.user.update_streak()
+    return {"success": True, "data": {"streak_count": streak}}

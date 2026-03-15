@@ -21,6 +21,7 @@ class EventSchema(BaseModel):
     date: date
     created_at: datetime
     updated_at: datetime
+    in_streak: bool
 
 
 class CreateEventSchema(BaseModel):

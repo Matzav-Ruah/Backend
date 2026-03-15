@@ -1,5 +1,13 @@
 from pydantic import BaseModel, ConfigDict
 from datetime import datetime
+from typing import Generic, TypeVar, Optional
+
+T = TypeVar("T")
+
+
+class ApiResponse(BaseModel, Generic[T]):
+    success: bool
+    data: Optional[T] = None
 
 
 class SignInSchema(BaseModel):
@@ -28,5 +36,5 @@ class UserProfileSchema(BaseModel):
     streak_count: int
 
 
-class UpdateStreakSchema(BaseModel):
-    submit_time: datetime
+class StreakSchema(BaseModel):
+    streak_count: int
