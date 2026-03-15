@@ -18,3 +18,9 @@ class UserAdmin(BaseUserAdmin):
         "created_at",
         "updated_at",
     )
+    fieldsets = BaseUserAdmin.fieldsets + (
+        (
+            "Additional Info",
+            {"fields": ("streak_count", "settings")},
+        ),
+    )

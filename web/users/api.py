@@ -75,23 +75,5 @@ def get_leaderboard(request):
 
 @api.get("/get-user-streak", response=schemas.ApiResponse[schemas.StreakSchema])
 def get_user_streak(request):
-    dates = (
-        Event.objects.filter(user=request.user)
-        .order_by("-date")
-        .values_list("date", flat=True)
-    )
-    if not dates:
-        return {"success": True, "data": {"streak_count": 0}}
-    if dates[0] < datetime.today().date() - timedelta(days=1):
-        return {"success": True, "data": {"streak_count": 0}}
-    streak = 1
-    prev = dates[0]
-    for current in dates[1:]:
-        if prev - current == timedelta(days=1):
-            streak += 1
-            prev = current
-        elif prev == current:
-            continue
-        else:
-            break
+    streak = request.user.update_streak()
     return {"success": True, "data": {"streak_count": streak}}

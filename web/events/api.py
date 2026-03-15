@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from django.shortcuts import get_object_or_404
 from ninja.security import django_auth
 from ninja import NinjaAPI
@@ -32,7 +32,9 @@ def create_event(request, payload: schemas.CreateEventSchema):
         emotional_state=payload.emotional_state,
         event_data=payload.event_data,
         date=payload.date,
+        in_streak=(payload.date == datetime.today().date()),
     )
+    request.user.update_streak()
     return 201, {"success": True, "data": schemas.EventSchema.from_orm(event)}
 
 
@@ -53,4 +55,5 @@ def update_event(request, date: date, payload: schemas.UpdateEventSchema):
 def delete_event(request, date: date):
     event = get_object_or_404(Event, date=date, user=request.user)
     event.delete()
+    request.user.update_streak()
     return {"success": True, "data": {}}
