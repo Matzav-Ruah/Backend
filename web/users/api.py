@@ -69,6 +69,7 @@ def get_leaderboard(request):
         "data": {
             "users": [schemas.UserProfileSchema.from_orm(user) for user in users],
             "activeUserPosition": position,
+            "activeUser": schemas.UserProfileSchema.from_orm(request.user),
         },
     }
 
