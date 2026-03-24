@@ -14,6 +14,9 @@ class User(AbstractUser):
     )
     streak_count = models.IntegerField(default=0, verbose_name="Streak count")
     settings = models.JSONField(default=dict, verbose_name="Settings")
+    in_leaderboard = models.BooleanField(
+        default=True, verbose_name="In leaderboard", db_index=True
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
 

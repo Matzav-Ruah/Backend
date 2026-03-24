@@ -33,7 +33,8 @@ class UserSchema(BaseModel):
 class UserProfileSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
-    username: str
+    first_name: str
+    last_name: str
     streak_count: int
 
 
@@ -44,3 +45,7 @@ class StreakSchema(BaseModel):
 class UpdateNameSchema(BaseModel):
     first_name: str
     last_name: str
+
+
+class ShowInLeaderboardSchema(BaseModel):
+    in_leaderboard: bool
