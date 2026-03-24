@@ -28,13 +28,14 @@ class UserSchema(BaseModel):
     settings: dict
     created_at: datetime
     updated_at: datetime
+    in_leaderboard: bool
 
 
 class UserProfileSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     first_name: str
-    last_name: str
+    last_name: Optional[str]
     streak_count: int
 
 
