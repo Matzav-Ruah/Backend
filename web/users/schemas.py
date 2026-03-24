@@ -1,6 +1,7 @@
-from pydantic import BaseModel, ConfigDict
 from datetime import datetime
-from typing import Generic, TypeVar, Optional
+from typing import Generic, Optional, TypeVar
+
+from pydantic import BaseModel, ConfigDict
 
 T = TypeVar("T")
 
@@ -38,3 +39,8 @@ class UserProfileSchema(BaseModel):
 
 class StreakSchema(BaseModel):
     streak_count: int
+
+
+class UpdateNameSchema(BaseModel):
+    first_name: str
+    last_name: str
