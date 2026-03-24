@@ -54,7 +54,11 @@ def user(request):
 
 @api.get("/leaderboard", auth=django_auth)
 def get_leaderboard(request):
-    users = User.objects.all().order_by("-streak_count", "id")[:3]
+    users = (
+        User.objects.filter(in_leaderboard=True)
+        .all()
+        .order_by("-streak_count", "id")[:3]
+    )
     position = (
         User.objects.filter(
             Q(streak_count__gt=request.user.streak_count)
@@ -82,5 +86,12 @@ def get_user_streak(request):
 def update_first_name(request, payload: schemas.UpdateNameSchema):
     request.user.first_name = payload.first_name
     request.user.last_name = payload.last_name
+    request.user.save()
+    return {"success": True, "data": schemas.UserSchema.from_orm(request.user)}
+
+
+@api.post("/show_in_leaderboard", auth=django_auth)
+def show_in_leaderboard(request, payload: schemas.ShowInLeaderboardSchema):
+    request.user.in_leaderboard = payload.in_leaderboard
     request.user.save()
     return {"success": True, "data": schemas.UserSchema.from_orm(request.user)}
