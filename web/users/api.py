@@ -1,14 +1,12 @@
-from ninja import NinjaAPI
-from ninja.security import django_auth
 from django.contrib.auth import authenticate, login, logout
-from django.middleware.csrf import get_token
 from django.db import IntegrityError
 from django.db.models import Q
-from .models import User
-from . import schemas
-from datetime import timedelta, datetime
-from events.models import Event
+from django.middleware.csrf import get_token
+from ninja import NinjaAPI
+from ninja.security import django_auth
 
+from . import schemas
+from .models import User
 
 api = NinjaAPI(urls_namespace="users")
 
@@ -78,3 +76,11 @@ def get_leaderboard(request):
 def get_user_streak(request):
     streak = request.user.update_streak()
     return {"success": True, "data": {"streak_count": streak}}
+
+
+@api.post("/update-name", auth=django_auth)
+def update_first_name(request, payload: schemas.UpdateNameSchema):
+    request.user.first_name = payload.first_name
+    request.user.last_name = payload.last_name
+    request.user.save()
+    return {"success": True, "data": schemas.UserSchema.from_orm(request.user)}
