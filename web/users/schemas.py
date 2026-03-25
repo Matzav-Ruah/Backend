@@ -23,7 +23,7 @@ class UserSchema(BaseModel):
     username: str
     email: str
     first_name: str
-    last_name: str
+    last_name: Optional[str]
     streak_count: int
     settings: dict
     created_at: datetime
